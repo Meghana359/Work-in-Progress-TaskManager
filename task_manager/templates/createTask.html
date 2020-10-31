@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Task Manager</title>
+{% endblock %}
+
+{% block body %}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+    function onSubmit() {
+    var content= $('#content').val();
+    var priority= $('#priority').val();
+    var description= $('#description').val();
+    var start_time= $('#start_time').val();
+    var end_time= $('#end_time').val();
+    var response;
+	  $.ajax({
+				  url: "/api/task/create",
+				  type: "POST",
+				  data: {'content':content,'priority':priority,'description':description,'start_time':start_time,'end_time':end_time}
+			  }).done(function(response) {
+				var html= "";
+                console.log("apiResponse",response)
+				response =response.result;
+					 $.each(response,function(key,val){
+					 console.log(val);
+						html+="RESULT :"+val
+					});
+					html +="";
+					$(".res").append(html);
+				});
+	};
+</script>
+<div class="content">
+    <div class="form" style="justify-content:center; display: flex;">
+        <form method="POST" >
+            <label for="content">Title:</label><br>
+            <input type="text" name="content" id="content"><br>
+            <label for="priority">Priority:</label><br>
+            <input type="text" name="priority" id="priority"><br>
+            <label for="description">Description:</label><br>
+            <input type="text" name="description" id="description"><br>
+            <label for="start_time">Start Time:</label><br>
+            <input type="datetime-local" name="start_time" id="start_time"><br>
+            <label for="end_time">End Time:</label><br>
+            <input type="datetime-local" name="end_time" id="end_time"><br>
+            <input type="submit" onclick="onSubmit()" value="Add Task">
+        </form>
+    </div>
+    <p class="res"></p>
+</div>
+{% endblock %}
